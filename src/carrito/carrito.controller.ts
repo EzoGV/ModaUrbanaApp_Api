@@ -102,6 +102,83 @@ export class CarritoController {
     return { success: true, data, total: data.length };
   }
 
+  @Get('cliente/:clienteId')
+  @ApiOperation({ summary: 'Obtener carrito de un cliente' })
+  @ApiParam({ name: 'clienteId', description: 'ID del cliente' })
+  @ApiResponse({ status: 200, description: 'Carrito actual del cliente' })
+  async findByCliente(@Param('clienteId') clienteId: string) {
+    const data = await this.carritoService.findByCliente(clienteId);
+    return { success: true, data };
+  }
+
+  @Post('agregar-item')
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Agregar producto al carrito' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        clienteId: { type: 'string', description: 'ID del cliente' },
+        productoId: { type: 'string', description: 'ID del producto' },
+        talla: { type: 'string', description: 'Talla seleccionada' },
+        cantidad: { type: 'number', description: 'Cantidad' }
+      },
+      required: ['clienteId', 'productoId', 'cantidad']
+    }
+  })
+  @ApiResponse({ status: 201, description: 'Producto agregado al carrito' })
+  async agregarItem(@Body() itemDto: {
+    clienteId: string;
+    productoId: string;
+    talla?: string;
+    cantidad: number;
+  }) {
+    const data = await this.carritoService.agregarItem(itemDto);
+    return {
+      success: true,
+      message: 'Producto agregado al carrito',
+      data,
+    };
+  }
+
+  @Delete('cliente/:clienteId/item/:itemId')
+  @ApiOperation({ summary: 'Remover item del carrito' })
+  @ApiParam({ name: 'clienteId', description: 'ID del cliente' })
+  @ApiParam({ name: 'itemId', description: 'ID del item' })
+  @ApiResponse({ status: 200, description: 'Item removido del carrito' })
+  async removerItem(@Param('clienteId') clienteId: string, @Param('itemId') itemId: string) {
+    await this.carritoService.removerItem(clienteId, itemId);
+    return { success: true, message: 'Item removido del carrito' };
+  }
+
+  @Post('confirmar-pedido')
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Confirmar pedido desde carrito' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        clienteId: { type: 'string', description: 'ID del cliente' },
+        direccionEntrega: { type: 'string', description: 'Dirección de entrega' },
+        metodoPago: { type: 'string', description: 'Método de pago' }
+      },
+      required: ['clienteId', 'direccionEntrega', 'metodoPago']
+    }
+  })
+  @ApiResponse({ status: 201, description: 'Pedido confirmado exitosamente' })
+  async confirmarPedido(@Body() pedidoDto: {
+    clienteId: string;
+    direccionEntrega: string;
+    metodoPago: string;
+  }) {
+    const data = await this.carritoService.confirmarPedido(pedidoDto);
+    return {
+      success: true,
+      message: 'Pedido confirmado exitosamente',
+      data,
+    };
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Obtener Carrito por ID' })
   @ApiParam({ name: 'id', description: 'ID del Carrito' })

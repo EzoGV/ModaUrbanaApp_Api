@@ -21,6 +21,12 @@ export class ProductoService {
     return productos;
   }
 
+  
+  async findByProductor(productorId: string): Promise<Producto[]> {
+    return this.productoModel.find({ productor: productorId })
+      .populate('productor', 'nombre email telefono ubicacion');
+  }
+
   async findOne(id: string | number): Promise<Producto> {
     const producto = await this.productoModel.findById(id).populate('categoria', 'nombre descripcion');
     if (!producto) {
@@ -43,4 +49,27 @@ export class ProductoService {
       throw new NotFoundException(`Producto con ID ${id} no encontrado`);
     }
   }
+  async filtrarRopa(filtros: any): Promise<Producto[]> {
+    const query: any = {};
+    if (filtros.categoria) query.categoria = filtros.categoria;
+    if (filtros.talla) query.talla = filtros.talla;
+    if (filtros.color) query.color = filtros.color;
+    if (filtros.precioMin) query.precio = { $gte: filtros.precioMin };
+    if (filtros.precioMax) {
+      query.precio = { ...query.precio, $lte: filtros.precioMax };
+    }
+    return this.productoModel.find(query).populate('categoria', 'nombre descripcion');
+  }
+  async findByCategoria(categoriaId: string): Promise<Producto[]> {
+    return this.productoModel.find({ categoria: categoriaId })
+      .populate('categoria', 'nombre descripcion');
+  }
+  async findTendencias(): Promise<Producto[]> {
+    return this.productoModel.find({ tendencia: true })
+      .populate('categoria', 'nombre descripcion')
+      .limit(10);
+  }
+
+
+
 }

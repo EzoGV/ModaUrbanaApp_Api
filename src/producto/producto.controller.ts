@@ -9,6 +9,7 @@ import {
   HttpCode,
   HttpStatus,
   Req,
+  Query,
   BadRequestException,
 } from '@nestjs/common';
 import { FastifyRequest } from 'fastify';
@@ -99,6 +100,39 @@ export class ProductoController {
   @ApiResponse({ status: 200, description: 'Lista de Productos' })
   async findAll() {
     const data = await this.productoService.findAll();
+    return { success: true, data, total: data.length };
+  }
+
+  @Get('filtros')
+  @ApiOperation({ summary: 'Filtrar productos de ropa por múltiples criterios' })
+  @ApiResponse({ status: 200, description: 'Lista de productos filtrados' })
+  async filtrarRopa(
+    @Query('talla') talla?: string,
+    @Query('material') material?: string,
+    @Query('estilo') estilo?: string,
+    @Query('genero') genero?: string,
+    @Query('precioMin') precioMin?: number,
+    @Query('precioMax') precioMax?: number
+  ) {
+    const filtros = { talla, material, estilo, genero, precioMin, precioMax };
+    const data = await this.productoService.filtrarRopa(filtros);
+    return { success: true, data, total: data.length };
+  }
+
+  @Get('categoria/:categoriaId')
+  @ApiOperation({ summary: 'Productos por categoría' })
+  @ApiParam({ name: 'categoriaId', description: 'ID de la categoría' })
+  @ApiResponse({ status: 200, description: 'Lista de productos por categoría' })
+  async findByCategoria(@Param('categoriaId') categoriaId: string) {
+    const data = await this.productoService.findByCategoria(categoriaId);
+    return { success: true, data, total: data.length };
+  }
+
+  @Get('tendencias')
+  @ApiOperation({ summary: 'Productos en tendencia' })
+  @ApiResponse({ status: 200, description: 'Lista de productos más populares' })
+  async findTendencias() {
+    const data = await this.productoService.findTendencias();
     return { success: true, data, total: data.length };
   }
 

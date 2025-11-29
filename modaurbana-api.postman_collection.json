@@ -495,6 +495,135 @@
           }
         }
       ]
+    },
+    {
+      "name": "Producto",
+      "item": [
+        {
+          "name": "Filtrar Ropa",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/producto/filtros?talla={{talla}}&material={{material}}&estilo={{estilo}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "producto",
+                "filtros?talla={{talla}}&material={{material}}&estilo={{estilo}}"
+              ]
+            },
+            "description": "Filtrar ropa por criterios"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints específicos de Producto"
+    },
+    {
+      "name": "Carrito",
+      "item": [
+        {
+          "name": "Mi Carrito",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carrito/cliente/{{clienteId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "carrito",
+                "cliente",
+                "{{clienteId}}"
+              ]
+            },
+            "description": "Carrito actual del cliente"
+          },
+          "response": []
+        },
+        {
+          "name": "Agregar al Carrito",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carrito/agregar-item",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "carrito",
+                "agregar-item"
+              ]
+            },
+            "description": "Agregar producto al carrito",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": \"{{clienteId}}\",\n  \"productoId\": \"{{productoId}}\",\n  \"cantidad\": 1\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Confirmar Pedido",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carrito/confirmar-pedido",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "carrito",
+                "confirmar-pedido"
+              ]
+            },
+            "description": "Confirmar pedido desde carrito",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": \"{{clienteId}}\",\n  \"direccionEntrega\": \"Mi dirección\"\n}"
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints específicos de Carrito"
     }
   ],
   "variable": [

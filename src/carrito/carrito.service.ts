@@ -45,4 +45,24 @@ export class CarritoService {
       throw new NotFoundException(`Carrito con ID ${id} no encontrado`);
     }
   }
+  async findByCliente(clienteId: string): Promise<Carrito | Carrito[]> {
+    const result = await this.carritoModel.find({ cliente: clienteId });
+    return result;
+  }
+  async agregarItem(dto: any): Promise<Carrito> {
+    // TODO: Implementar lógica
+    throw new Error('Método no implementado');
+  }
+  async removerItem(clienteId: string, itemId: string): Promise<void> {
+    // TODO: Implementar lógica
+    throw new Error('Método no implementado');
+  }
+  async confirmarPedido(dto: any): Promise<any> {
+    // TODO: Implementar lógica
+    throw new Error('Método no implementado');
+  }
+
+
+
+
 }
