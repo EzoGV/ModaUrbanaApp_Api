@@ -6,9 +6,16 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+
 import { AuthModule } from './auth/auth.module';
 import { UploadModule } from './upload/upload.module';
 import { ClienteProfileModule } from './cliente-profile/cliente-profile.module';
+
+// 👇 ESTOS FALTABAN
+import { CategoriaModule } from './categoria/categoria.module';
+import { ProductoModule } from './producto/producto.module';
+import { CarritoModule } from './carrito/carrito.module';
+import { PedidoModule } from './pedido/pedido.module';
 
 @Module({
   imports: [
@@ -22,25 +29,19 @@ import { ClienteProfileModule } from './cliente-profile/cliente-profile.module';
       }),
     }),
     ThrottlerModule.forRoot([
-      {
-        name: 'short',
-        ttl: 1000,
-        limit: 3,
-      },
-      {
-        name: 'medium',
-        ttl: 10000,
-        limit: 20,
-      },
-      {
-        name: 'long',
-        ttl: 60000,
-        limit: 100,
-      },
+      { name: 'short', ttl: 1000, limit: 3 },
+      { name: 'medium', ttl: 10000, limit: 20 },
+      { name: 'long', ttl: 60000, limit: 100 },
     ]),
+
+    // MÓDULOS DE TU APP
     AuthModule,
     ClienteProfileModule,
     UploadModule,
+    CategoriaModule,
+    CarritoModule,
+    ProductoModule,
+    PedidoModule,
   ],
   controllers: [AppController],
   providers: [
