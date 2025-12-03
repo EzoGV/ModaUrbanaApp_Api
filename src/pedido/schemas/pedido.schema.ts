@@ -1,49 +1,32 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
-export type ProductoDocument = Producto & Document;
+export type PedidoDocument = Pedido & Document;
 
 @Schema({ timestamps: true })
-export class Producto {
-  @Prop({ required: true })
-  nombre: string;
+export class Pedido {
+  @Prop({ type: Types.ObjectId, ref: 'Cliente', required: true })
+  cliente: Types.ObjectId;
 
-  @Prop({
-    enum: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
-    required: false,
-  })
-  talla?: string;
-
-  @Prop()
-  material?: string;
-
-  @Prop()
-  estilo?: string;        // Streetwear, Casual, Skater, etc.
-
-  @Prop()
-  descripcion?: string;
-
-  @Prop({ type: Types.ObjectId, ref: 'Categoria' })
-  categoria?: Types.ObjectId;
-
-  @Prop({ default: false })
-  tendencia?: boolean;    // Para "Productos en tendencia"
-
-  @Prop()
-  color?: string;
+  @Prop({ type: [{ producto: { type: Types.ObjectId, ref: 'Producto' }, cantidad: Number, precio: Number }] })
+  items: any;
 
   @Prop({ min: 0 })
-  precio: number;
+  total: number;
+
+  @Prop({ enum: ['pendiente', 'procesando', 'enviado', 'entregado'], default: 'pendiente' })
+  estado?: string;
 
   @Prop()
   imagen?: string;
 
   @Prop()
   imagenThumbnail?: string;
+
 }
 
-export const ProductoSchema = SchemaFactory.createForClass(Producto);
+export const PedidoSchema = SchemaFactory.createForClass(Pedido);
 
-ProductoSchema.index({ categoria: 1 });
-ProductoSchema.index({ talla: 1 });
-ProductoSchema.index({ nombre: 'text' });
+PedidoSchema.index({ cliente: 1 });
+PedidoSchema.index({ estado: 1 });
+PedidoSchema.index({ createdAt: -1 });
